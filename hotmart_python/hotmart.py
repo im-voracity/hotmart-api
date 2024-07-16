@@ -42,15 +42,22 @@ class Hotmart:
                  sandbox: bool = False,
                  log_level: int = logging.CRITICAL) -> None:
         """
-        Initializes the Hotmart API client. Full docs can be found at
-        https://developers.hotmart.com/docs/en/
-        :param client_id: The Client ID provided by Hotmart.
-        :param client_secret: The Client Secret provided by Hotmart.
-        :param basic: The Basic Token provided by Hotmart.
-        :param api_version: The version of the API to use (default is "1").
-        :param sandbox: Whether to use the sandbox or not (default is False).
-        :param log_level: The logging level to use (default is logging.INFO).
+        Initializes the Hotmart API client.
+
+        Full docs can be found at https://developers.hotmart.com/docs/en/
+
+        Args:
+            client_id (str): The Client ID provided by Hotmart.
+            client_secret (str): The Client Secret provided by Hotmart.
+            basic (str): The Basic Token provided by Hotmart.
+            api_version (int): The version of the API to use (default is "1").
+            sandbox (bool): Whether to use the sandbox or not (default is False).
+            log_level (int): The logging level to use (default is logging.INFO).
+
+        Returns:
+            None
         """
+
 
         self.id = client_id
         self.secret = client_secret
