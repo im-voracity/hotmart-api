@@ -1,6 +1,0 @@
-
-[flake8]
-exclude =
-    .venv
-    __init__.py
-max-line-length = 100

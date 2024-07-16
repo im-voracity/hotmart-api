@@ -13,20 +13,20 @@ logger = logging.getLogger(__name__)
 
 # Coloredlogs Configs
 coloredFormatter = coloredlogs.ColoredFormatter(
-    fmt='[%(name)s] %(asctime)s  %(message)s',
+    fmt="[%(name)s] %(asctime)s  %(message)s",
     level_styles=dict(
-        debug=dict(color='white'),
-        info=dict(color='blue'),
-        warning=dict(color='yellow', bright=True),
-        error=dict(color='red', bold=True, bright=True),
-        critical=dict(color='black', bold=True, background='red'),
+        debug=dict(color="white"),
+        info=dict(color="blue"),
+        warning=dict(color="yellow", bright=True),
+        error=dict(color="red", bold=True, bright=True),
+        critical=dict(color="black", bold=True, background="red"),
     ),
     field_styles=dict(
-        name=dict(color='white'),
-        asctime=dict(color='white'),
-        funcName=dict(color='white'),
-        lineno=dict(color='white'),
-    )
+        name=dict(color="white"),
+        asctime=dict(color="white"),
+        funcName=dict(color="white"),
+        lineno=dict(color="white"),
+    ),
 )
 
 # Console Handler Configs
@@ -37,10 +37,15 @@ logger.setLevel(level=logging.CRITICAL)
 
 
 class Hotmart:
-    def __init__(self, client_id: str, client_secret: str, basic: str,
-                 api_version: int = 1,
-                 sandbox: bool = False,
-                 log_level: int = logging.CRITICAL) -> None:
+    def __init__(
+        self,
+        client_id: str,
+        client_secret: str,
+        basic: str,
+        api_version: int = 1,
+        sandbox: bool = False,
+        log_level: int = logging.CRITICAL,
+    ) -> None:
         """
         Initializes the Hotmart API client.
 
@@ -57,7 +62,6 @@ class Hotmart:
         Returns:
             None
         """
-
 
         self.id = client_id
         self.secret = client_secret
@@ -78,9 +82,13 @@ class Hotmart:
         """
         Builds a payload with the given kwargs, ignoring the ones
         with None value
-        :param kwargs: Expected kwargs can be found in the "Request parameters"
-         section of the API Docs.
-        :return: Dict[str, Any]: The built payload as a dictionary.
+
+        Args:
+            kwargs (Any): Expected kwargs can be found in the "Request parameters"
+             section of the API Docs.
+
+        Returns:
+            Dict[str, Any]: The built payload as a dictionary.
         """
         payload = {}
         for key, value in kwargs.items():
@@ -89,13 +97,20 @@ class Hotmart:
         return payload
 
     @staticmethod
-    def _handle_response(response: Tuple[Dict[str, Any], List[Dict[str, Any]]],
-                         enhance=True) -> Response:
+    def _handle_response(
+        response: Tuple[Dict[str, Any], List[Dict[str, Any]]], enhance=True
+    ) -> Response:
         """
         Standardizes the output of the response to always be a list of dictionaries.
-        :param response: The original response which can be a dictionary or a list of dictionaries.
-        :param enhance: When True, discards page_info and returns only the items. (Default is True)
-        :return: A list of dictionaries.
+
+        Args:
+            response (Response): The original response which can be
+            a dictionary or a list of dictionaries.
+            enhance (bool): When True, discards page_info and returns only the
+            items. (Default is True)
+
+        Returns:
+            A list of dictionaries.
         """
         try:
             if enhance:
@@ -119,55 +134,71 @@ class Hotmart:
         except KeyError:
             return [response]
 
-    def _build_url(self, endpoint_type: str):
+    def _build_url(self, endpoint_type: str) -> str:
         """
         Builds the URLs for better dynamic requests.
-        :param endpoint_type: Supported types: payments or club
-        :return:
+        Args:
+            endpoint_type (str): Supported types: payments or club
+
+        Returns:
+            str: The full URL.
         """
 
-        supported_types = ['payments', 'club']
+        supported_types = ["payments", "club"]
         if endpoint_type.lower() not in supported_types:
             raise ValueError(f"Unsupported endpoint type: {endpoint_type}")
 
-        return (f'https://{"sandbox" if self.sandbox else "developers"}.hotmart.com/'
-                f'{endpoint_type.lower()}/api/v{self.api_version}')
+        return (
+            f'https://{"sandbox" if self.sandbox else "developers"}.hotmart.com/'
+            f"{endpoint_type.lower()}/api/v{self.api_version}"
+        )
 
-    def _sandbox_error_warning(self):
+    def _sandbox_error_warning(self) -> None:
         """
-        Logs a warning message about the Hotmart Sandbox API not supporting some requests
-        :return:
+        Log a warning message about the Hotmart Sandbox API not supporting some requests
+
+        Returns:
+            None
         """
-        self.logger.warning("At the date of last update for this library"
-                            " the Hotmart Sandbox API does NOT supported this method.")
+        self.logger.warning(
+            "At the date of last update for this library"
+            " the Hotmart Sandbox API does NOT supported this method."
+        )
         self.logger.warning("This method probably won't work in the Sandbox mode.")
         return
 
     def _log_instance_mode(self) -> None:
         """
         Logs the instance mode (Sandbox or Production).
-        :return: None
+
+        Returns:
+            None
         """
         return self.logger.warning(
-            f"Instance in {'Sandbox' if self.sandbox else 'Production'} mode")
+            f"Instance in {'Sandbox' if self.sandbox else 'Production'} mode"
+        )
 
-    def _make_request(self,
-                      method: Any,
-                      url: str,
-                      headers: Optional[Dict[str, str]] = None,
-                      params: Optional[Dict[str, Any]] = None,
-                      body: Optional[Dict[str, str]] = None, log_level: Optional[int] = None) -> \
-            List[Dict[str, Any]]:
+    def _make_request(
+        self,
+        method: Any,
+        url: str,
+        headers: Optional[Dict[str, str]] = None,
+        params: Optional[Dict[str, Any]] = None,
+        body: Optional[Dict[str, str]] = None,
+        log_level: Optional[int] = None,
+    ) -> List[Dict[str, Any]]:
         """
         Makes a request to the given url.
-        :param method: The request method (e.g, requests.get, requests.post).
-        :param url: The URL to make the request to.
-        :param headers: Optional request headers.
-        :param params: Optional request parameters.
-        :param log_level: The logging level for this method (default is None,
-        inherits from class level).
-        :return: The JSON response if the request was successful,
-        None otherwise.
+
+        Args:
+            method (Any): The request method (e.g, requests.get, requests.post).
+            url (str): The URL to make the request to.
+            headers (Optional[Dict[str, str]]): Optional request headers.
+            params (Optional[Dict[str, str]]): Optional request parameters.
+            log_level (Optional[int]): The logging level for this method (default is
+            None, inherits from class level).
+        Returns:
+             The JSON response if the request was successful, None otherwise.
         """
 
         if log_level is not None:
@@ -190,19 +221,25 @@ class Hotmart:
             # noinspection PyUnboundLocalVariable
             if e.response.status_code == 401 or e.response.status_code == 403:
                 if self.sandbox:
-                    self.logger.error("Perhaps the credentials aren't for Sandbox Mode?")
+                    self.logger.error(
+                        "Perhaps the credentials aren't for Sandbox Mode?"
+                    )
                 else:
                     self.logger.error("Perhaps the credentials are for Sandbox Mode?")
                 raise e
 
             if e.response.status_code == 422:
                 self.logger.error(f"Error {e.response.status_code}")
-                self.logger.error("This usually happens when the request is missing"
-                                  " body parameters.")
+                self.logger.error(
+                    "This usually happens when the request is missing"
+                    " body parameters."
+                )
                 raise e
 
             if e.response.status_code == 500 and self.sandbox:
-                self.logger.error("This happens with some endpoints in the Sandbox Mode.")
+                self.logger.error(
+                    "This happens with some endpoints in the Sandbox Mode."
+                )
                 self.logger.error("Usually the API it's not down, it's just a bug.")
 
             raise e
@@ -210,27 +247,39 @@ class Hotmart:
     def _is_token_expired(self) -> bool:
         """
         Checks if the current token has expired.
-        :return: True if the token has expired, False otherwise.
+        Returns:
+             True if the token has expired, False otherwise.
         """
         return self.token_expires_at is not None and self.token_expires_at < time.time()
 
     def _fetch_new_token(self) -> str:
+        """
+        Requests a new token from the Hotmart API.
+        Returns:
+            str: A new access token.
+
+        """
         self.logger.debug("Fetching a new access token.")
 
-        method_url = 'https://api-sec-vlc.hotmart.com/security/oauth/token'
-        headers = {'Authorization': self.basic}
-        payload = {'grant_type': 'client_credentials', 'client_id': self.id,
-                   'client_secret': self.secret}
+        method_url = "https://api-sec-vlc.hotmart.com/security/oauth/token"
+        headers = {"Authorization": self.basic}
+        payload = {
+            "grant_type": "client_credentials",
+            "client_id": self.id,
+            "client_secret": self.secret,
+        }
 
-        response = self._make_request(requests.post, method_url,
-                                      headers=headers, params=payload)
+        response = self._make_request(
+            requests.post, method_url, headers=headers, params=payload
+        )
         self.logger.debug("Token obtained successfully")
-        return response['access_token']
+        return response["access_token"]
 
     def _get_token(self) -> str:
         """
         Retrieves an access token to authenticate requests.
-        :return: The access token if obtained successfully, otherwise None.
+        Returns:
+             str: The access token if obtained successfully, otherwise None.
         """
         if not self._is_token_expired() and self.token_cache is not None:
             if not self.token_found_in_cache:
@@ -246,170 +295,239 @@ class Hotmart:
             self.token_found_in_cache = False
         return token
 
-    def _request_with_token(self, method: str, url: str, enhance: bool = None,
-                            body: Optional[Dict[str, Any]] = None,
-                            params: Optional[Dict[str, Any]] = None) -> Response:
+    def _request_with_token(
+        self,
+        method: str,
+        url: str,
+        enhance: bool = None,
+        body: Optional[Dict[str, Any]] = None,
+        params: Optional[Dict[str, Any]] = None,
+    ) -> Response:
         """
         Makes an authenticated request (GET, POST, PATCH, etc.) to the
         specified URL with the given body or params.
-        :param method: The HTTP method (e.g., 'GET', 'POST', 'PATCH').
-        :param url: the URL to make the request to.
-        :param body: Optional request body.
-        :param params: Optional request parameters.
-        :return: The JSON Response if successful,
-        otherwise raises an exception.
+        Args:
+            method (str): The HTTP method (e.g., 'GET', 'POST', 'PATCH').
+            url (str): the URL to make the request to.
+            enhance (Optional[bool]): Whether to enhance the response or not.
+            body (Optional[Dict[str, Any]]): Optional request body.
+            params (Optional[Dict[str, Any]]): Optional request parameters.
+        Returns:
+             The JSON Response if successful, otherwise raises an exception.
         """
         token = self._get_token()
 
         headers = {
-            'Content-Type': 'application/json',
-            'Authorization': f'Bearer {token}'
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {token}",
         }
 
         method_mapping = {
-            'GET': requests.get,
-            'POST': requests.post,
-            'PATCH': requests.patch,
-            'DELETE': requests.delete
+            "GET": requests.get,
+            "POST": requests.post,
+            "PATCH": requests.patch,
+            "DELETE": requests.delete,
         }
 
         if method.upper() not in method_mapping:
             raise ValueError(f"Unsupported method: {method}")
 
-        response = self._make_request(method_mapping[method.upper()], url, headers=headers,
-                                      params=params, body=body)
+        response = self._make_request(
+            method_mapping[method.upper()],
+            url,
+            headers=headers,
+            params=params,
+            body=body,
+        )
 
         return self._handle_response(response, enhance=enhance)
 
     def get_sales_history(self, enhance: bool = True, **kwargs: Any) -> Response:
         """
         Retrieves sales history data based on the provided filters.
-        :param enhance: When True, discards page_info and returns only the items. (Default is True)
-        :param kwargs: Filters to apply on the request. Expected kwargs can be found in
-        the "Request parameters" section of the API Docs.
-        :return: Sales history data if available, otherwise None.
+
+        Args:
+            enhance (bool): When True, discards page_info and returns only the
+            items. (Default is True)
+            kwargs (Any): Filters to apply on the request. Expected kwargs can be found
+            in the "Request parameters" section of the API Docs.
+
+        Returns:
+            Sales history data.
         """
 
         self._log_instance_mode()
 
         method = "get"
-        base_url = self._build_url('payments')
-        url = f'{base_url}/sales/history'
+        base_url = self._build_url("payments")
+        url = f"{base_url}/sales/history"
         payload = self._build_payload(**kwargs)
-        return self._request_with_token(method=method, url=url, params=payload, enhance=enhance)
+        return self._request_with_token(
+            method=method, url=url, params=payload, enhance=enhance
+        )
 
     def get_sales_summary(self, enhance: bool = True, **kwargs: Any) -> Response:
         """
         Retrieves sales summary data based on the provided filters.
-        :param enhance: When True, discards page_info and returns only the items. (Default is True)
-        :param kwargs: Filters to apply on the request. Expected kwargs can be found in the
-        "Request parameters" section of the API Docs.
-        :return: Sales summary data if available, otherwise None.
+
+        Args:
+            enhance (bool): When True, discards page_info and returns only the
+            items. (Default is True)
+            kwargs (Any): Filters to apply on the request. Expected kwargs can be found
+            in the "Request parameters" section of the API Docs.
+
+        Returns:
+             Sales summary data if available, otherwise None.
         """
 
         self._log_instance_mode()
 
         method = "get"
-        base_url = self._build_url('payments')
-        url = f'{base_url}/sales/summary'
+        base_url = self._build_url("payments")
+        url = f"{base_url}/sales/summary"
         payload = self._build_payload(**kwargs)
-        return self._request_with_token(method=method, url=url, params=payload, enhance=enhance)
+        return self._request_with_token(
+            method=method, url=url, params=payload, enhance=enhance
+        )
 
     def get_sales_participants(self, enhance: bool = True, **kwargs: Any) -> Response:
         """
         Retrieves sales user data based on the provided filters.
-        :param enhance: When True, discards page_info and returns only the items. (Default is True)
-        :param kwargs: Filters to apply on the request. Expected kwargs can be found in the
-        "Request parameters" section of the API Docs.
-        :return: Sales user data if available, otherwise None.
+
+        Args:
+            enhance (bool): When True, discards page_info and returns only the
+            items. (Default is True)
+            kwargs (Any): Filters to apply on the request. Expected kwargs can be found
+            in the "Request parameters" section of the API Docs.
+
+        Returns:
+             Sales user data if available, otherwise None.
         """
 
         self._log_instance_mode()
 
         method = "get"
-        base_url = self._build_url('payments')
-        url = f'{base_url}/sales/users'
+        base_url = self._build_url("payments")
+        url = f"{base_url}/sales/users"
         payload = self._build_payload(**kwargs)
-        return self._request_with_token(method=method, url=url, params=payload, enhance=enhance)
+        return self._request_with_token(
+            method=method, url=url, params=payload, enhance=enhance
+        )
 
     def get_sales_commissions(self, enhance: bool = True, **kwargs: Any) -> Response:
         """
         Retrieves sales commissions data based on the provided filters.
-        :param enhance: When True, discards page_info and returns only the items. (Default is True)
-        :param kwargs: Filters to apply on the request. Expected kwargs can be found in the
-        "Request parameters" section of the API Docs.
-        :return: Sales commissions data if available, otherwise None.
+
+        Args:
+            enhance (bool): When True, discards page_info and returns only the
+            items. (Default is True)
+            kwargs (Any): Filters to apply on the request. Expected kwargs can be found
+            in the "Request parameters" section of the API Docs.
+
+        Returns:
+            Sales commissions data if available, otherwise None.
         """
 
         self._log_instance_mode()
 
         method = "get"
-        base_url = self._build_url('payments')
-        url = f'{base_url}/sales/commissions'
+        base_url = self._build_url("payments")
+        url = f"{base_url}/sales/commissions"
         payload = self._build_payload(**kwargs)
-        return self._request_with_token(method=method, url=url, params=payload, enhance=enhance)
+        return self._request_with_token(
+            method=method, url=url, params=payload, enhance=enhance
+        )
 
     def get_sales_price_details(self, enhance: bool = True, **kwargs: Any) -> Response:
         """
         Retrieves sales price details based on the provided filters.
-        :param enhance: When True, discards page_info and returns only the items. (Default is True)
-        :param kwargs: Filters to apply on the request. Expected kwargs can be found in the
-        "Request parameters" section of the API Docs.
-        :return: Sales price details if available, otherwise None.
+
+        Args:
+            enhance (bool): When True, discards page_info and returns only the
+            items. (Default is True)
+            kwargs (Any): Filters to apply on the request. Expected kwargs can be found
+            in the "Request parameters" section of the API Docs.
+
+        Returns:
+             Sales price details if available, otherwise None.
         """
 
         self._log_instance_mode()
 
         method = "get"
-        base_url = self._build_url('payments')
-        url = f'{base_url}/sales/price/details'
+        base_url = self._build_url("payments")
+        url = f"{base_url}/sales/price/details"
         payload = self._build_payload(**kwargs)
-        return self._request_with_token(method=method, url=url, params=payload, enhance=enhance)
+        return self._request_with_token(
+            method=method, url=url, params=payload, enhance=enhance
+        )
 
     def get_subscriptions(self, enhance: bool = True, **kwargs: Any) -> Response:
         """
         Retrieves subscription data based on the provided filters.
-        :param enhance: When True, discards page_info and returns only the items. (Default is True)
-        :param kwargs: Filters to apply on the request. Expected kwargs can be found in the
-        "Request parameters" section of the API Docs.
-        :return: Subscription data if available, otherwise None.
+
+        Args:
+            enhance (bool): When True, discards page_info and returns only the
+            items. (Default is True)
+            kwargs (Any): Filters to apply on the request. Expected kwargs can be found
+            in the "Request parameters" section of the API Docs.
+
+        Returns:
+            Subscription data if available, otherwise None.
         """
 
         self._log_instance_mode()
 
         method = "get"
-        base_url = self._build_url('payments')
-        url = f'{base_url}/subscriptions'
+        base_url = self._build_url("payments")
+        url = f"{base_url}/subscriptions"
         payload = self._build_payload(**kwargs)
-        return self._request_with_token(method=method, url=url, params=payload, enhance=enhance)
+        return self._request_with_token(
+            method=method, url=url, params=payload, enhance=enhance
+        )
 
-    def get_subscriptions_summary(self, enhance: bool = True, **kwargs: Any) -> Response:
+    def get_subscriptions_summary(
+        self, enhance: bool = True, **kwargs: Any
+    ) -> Response:
         """
         Retrieves subscription summary data based on the provided filters.
-        :param enhance: When True, discards page_info and returns only the items. (Default is True)
-        :param kwargs: Filters to apply on the request. Expected kwargs can be found in the
-        "Request parameters" section of the API Docs.
-        :return: Subscription data if available, otherwise None.
+
+        Args:
+            enhance (bool): When True, discards page_info and returns only the
+            items. (Default is True)
+            kwargs (Any): Filters to apply on the request. Expected kwargs can be found
+            in the "Request parameters" section of the API Docs.
+
+        Returns:
+             Subscription data if available, otherwise None.
         """
 
         self._log_instance_mode()
         self._sandbox_error_warning()
 
         method = "get"
-        base_url = self._build_url('payments')
-        url = f'{base_url}/subscriptions/summary'
+        base_url = self._build_url("payments")
+        url = f"{base_url}/subscriptions/summary"
         payload = self._build_payload(**kwargs)
-        return self._request_with_token(method=method, url=url, params=payload, enhance=enhance)
+        return self._request_with_token(
+            method=method, url=url, params=payload, enhance=enhance
+        )
 
-    def get_subscription_purchases(self, subscriber_code, enhance: bool = True, **kwargs: Any) -> \
-            Response:
+    def get_subscription_purchases(
+        self, subscriber_code: str, enhance: bool = True, **kwargs: Any
+    ) -> Response:
         """
         Retrieves subscription purchases data based on the provided filters.
-        :param enhance: When True, discards page_info and returns only the items. (Default is True)
-        :param subscriber_code: The subscriber code to filter the request.
-        :param kwargs: Filters to apply on the request. Expected kwargs can be found in the
-        "Request parameters" section of the API Docs.
-        :return: Subscription purchases data if available, otherwise None.
+
+        Args:
+            enhance (bool): When True, discards page_info and returns only
+             the items. (Default is True)
+            subscriber_code (str): The subscriber code to filter the request.
+            kwargs (Any): Filters to apply on the request. Expected kwargs can be found
+            in the "Request parameters" section of the API Docs.
+
+        Returns:
+             Subscription purchases data if available, otherwise None.
         """
 
         self._log_instance_mode()
@@ -417,17 +535,23 @@ class Hotmart:
             self._sandbox_error_warning()
 
         method = "get"
-        base_url = self._build_url('payments')
-        url = f'{base_url}/subscriptions/{subscriber_code}/purchases'
+        base_url = self._build_url("payments")
+        url = f"{base_url}/subscriptions/{subscriber_code}/purchases"
         payload = self._build_payload(**kwargs)
-        return self._request_with_token(method=method, url=url, params=payload, enhance=enhance)
+        return self._request_with_token(
+            method=method, url=url, params=payload, enhance=enhance
+        )
 
-    def cancel_subscription(self, subscriber_code: list[str], send_email: bool = True) -> Response:
+    def cancel_subscription(
+        self, subscriber_code: List[str], send_email: bool = True
+    ) -> Response:
         """
         Cancels a subscription.
 
-        :param subscriber_code: The subscriber code you want to cancel the subscription
-        :param send_email: Whether to email the subscriber or not (default is True).
+        Args:
+            subscriber_code (List[str]): The subscriber code you want to cancel
+            the subscription.
+            send_email (bool): Whether to email the subscriber or not (default is True).
         :return:
         """
 
@@ -436,23 +560,24 @@ class Hotmart:
             self._sandbox_error_warning()
 
         method = "post"
-        base_url = self._build_url('payments')
-        url = f'{base_url}/subscriptions/cancel'
-        payload = {
-            "subscriber_code": subscriber_code,
-            "send_email": send_email
-        }
+        base_url = self._build_url("payments")
+        url = f"{base_url}/subscriptions/cancel"
+        payload = {"subscriber_code": subscriber_code, "send_email": send_email}
         return self._request_with_token(method=method, url=url, body=payload)
 
-    def reactivate_and_charge_subscription(self, subscriber_code: list[str], charge: bool = False) \
-            -> Response:
+    def reactivate_and_charge_subscription(
+        self, subscriber_code: List[str], charge: bool = False
+    ) -> Response:
         """
         Reactivates and charges a subscription.
 
-        :param subscriber_code: The subscriber code you want to reactivate
+        Args:
+        subscriber_code (List[str]): The subscriber code you want to reactivate
         and charge the subscription
-        :param charge: Whether to make a new charge to the subscriber or not (default is False).
-        :return: A dict containing in
+        charge (bool): Whether to make a new charge to the subscriber
+        or not (default is False).
+        Returns:
+             A dict with the response.
         """
 
         self._log_instance_mode()
@@ -460,21 +585,21 @@ class Hotmart:
             self._sandbox_error_warning()
 
         method = "post"
-        base_url = self._build_url('payments')
-        url = f'{base_url}/subscriptions/reactivate'
-        payload = {
-            "subscriber_code": subscriber_code,
-            "charge": charge
-        }
+        base_url = self._build_url("payments")
+        url = f"{base_url}/subscriptions/reactivate"
+        payload = {"subscriber_code": subscriber_code, "charge": charge}
         return self._request_with_token(method=method, url=url, body=payload)
 
     def change_due_day(self, subscriber_code: str, new_due_day: int) -> Response:
         """
         Changes the due day of a subscription.
 
-        :param subscriber_code: The subscriber code you want to change the due day
-        :param new_due_day: The new due day you want to set
-        :return: Empty body, just a status code 200 is successful.
+        Args:
+            subscriber_code (str): The subscriber code you want to change the due day.
+            new_due_day (int): The new due day you want to set.
+
+        Response:
+            Empty body, just a status code 200 is successful.
         """
 
         self._log_instance_mode()
@@ -482,21 +607,23 @@ class Hotmart:
             self._sandbox_error_warning()
 
         method = "patch"
-        base_url = self._build_url('payments')
-        url = f'{base_url}/subscriptions/{subscriber_code}'
-        payload = {
-            "due_day": new_due_day
-        }
+        base_url = self._build_url("payments")
+        url = f"{base_url}/subscriptions/{subscriber_code}"
+        payload = {"due_day": new_due_day}
         return self._request_with_token(method=method, url=url, body=payload)
 
-    def create_coupon(self, product_id: str, coupon_code: str, discount: float) -> Response:
+    def create_coupon(
+        self, product_id: str, coupon_code: str, discount: float
+    ) -> Response:
         """
         Creates a coupon for a product.
-        :param product_id: UID of the product you want to create the coupon for.
-        :param coupon_code: The code of the coupon you want to create.
-        :param discount: The discount you want to apply to the coupon, must be greater than 0 and
-        less than 0.99.
-        :return: Empty body, just a status code 200 is successful.
+        Args:
+            product_id (str): UID of the product you want to create the coupon for.
+            coupon_code (str): The code of the coupon you want to create.
+            discount (float): The discount you want to apply to the coupon, must be
+            greater than 0 and less than 0.99.
+        Returns:
+             Empty body, just a status code 200 is successful.
         """
 
         self._log_instance_mode()
@@ -504,21 +631,23 @@ class Hotmart:
             self._sandbox_error_warning()
 
         method = "post"
-        base_url = self._build_url('payments')
-        url = f'{base_url}/product/{product_id}/coupon'
-        payload = {
-            "code": coupon_code,
-            "discount": discount
-        }
+        base_url = self._build_url("payments")
+        url = f"{base_url}/product/{product_id}/coupon"
+        payload = {"code": coupon_code, "discount": discount}
         return self._request_with_token(method=method, url=url, body=payload)
 
     def get_coupon(self, product_id: str, code: str, enhance: bool = True) -> Response:
         """
         Retrieves a coupon for a product.
-        :param enhance: When True, discards page_info and returns only the items. (Default is True)
-        :param product_id: UID of the product you want to retrieve the coupon for.
-        :param code: The code of the coupon you want to retrieve.
-        :return: All Coupons for the product.
+
+        Args:
+        enhance (bool): When True, discards page_info and returns only the
+        items. (Default is True).
+        product_id (str): UID of the product you want to retrieve the coupon for.
+        code (str): The code of the coupon you want to retrieve.
+
+        Returns:
+             All Coupons for the product.
         """
 
         self._log_instance_mode()
@@ -526,18 +655,22 @@ class Hotmart:
             self._sandbox_error_warning()
 
         method = "get"
-        base_url = self._build_url('payments')
-        url = f'{base_url}/coupon/product/{product_id}'
-        params = {
-            "code": code
-        }
-        return self._request_with_token(method=method, url=url, params=params, enhance=enhance)
+        base_url = self._build_url("payments")
+        url = f"{base_url}/coupon/product/{product_id}"
+        params = {"code": code}
+        return self._request_with_token(
+            method=method, url=url, params=params, enhance=enhance
+        )
 
     def delete_coupon(self, coupon_id):
         """
         Deletes a coupon.
-        :param coupon_id:
-        :return: Empty body, just a status code 200 is successful.
+
+        Args:
+            coupon_id (str):
+        
+        Return:
+             Empty body, just a status code 200 is successful.
         """
 
         self._log_instance_mode()
@@ -545,6 +678,6 @@ class Hotmart:
             self._sandbox_error_warning()
 
         method = "delete"
-        base_url = self._build_url('payments')
-        url = f'{base_url}/coupon/{coupon_id}'
+        base_url = self._build_url("payments")
+        url = f"{base_url}/coupon/{coupon_id}"
         return self._request_with_token(method=method, url=url)
