@@ -84,8 +84,8 @@ class Hotmart:
         with None value
 
         Args:
-            kwargs (Any): Expected kwargs can be found in the "Request parameters"
-             section of the API Docs.
+            kwargs (Any): Expected kwargs can be found in the "Request parameters
+                section of the API Docs.
 
         Returns:
             Dict[str, Any]: The built payload as a dictionary.
@@ -105,9 +105,9 @@ class Hotmart:
 
         Args:
             response (Response): The original response which can be
-            a dictionary or a list of dictionaries.
+                a dictionary or a list of dictionaries.
             enhance (bool): When True, discards page_info and returns only the
-            items. (Default is True)
+                items. (Default is True)
 
         Returns:
             A list of dictionaries.
@@ -192,13 +192,13 @@ class Hotmart:
 
         Args:
             method (Any): The request method (e.g, requests.get, requests.post).
-            url (str): The URL to make the request to.
+                url (str): The URL to make the request to.
             headers (Optional[Dict[str, str]]): Optional request headers.
             params (Optional[Dict[str, str]]): Optional request parameters.
             log_level (Optional[int]): The logging level for this method (default is
-            None, inherits from class level).
+                None, inherits from class level).
         Returns:
-             The JSON response if the request was successful, None otherwise.
+             dict: The JSON response if the request was successful, None otherwise.
         """
 
         if log_level is not None:
@@ -306,12 +306,14 @@ class Hotmart:
         """
         Makes an authenticated request (GET, POST, PATCH, etc.) to the
         specified URL with the given body or params.
+
         Args:
             method (str): The HTTP method (e.g., 'GET', 'POST', 'PATCH').
             url (str): the URL to make the request to.
             enhance (Optional[bool]): Whether to enhance the response or not.
             body (Optional[Dict[str, Any]]): Optional request body.
             params (Optional[Dict[str, Any]]): Optional request parameters.
+
         Returns:
              The JSON Response if successful, otherwise raises an exception.
         """
@@ -348,9 +350,9 @@ class Hotmart:
 
         Args:
             enhance (bool): When True, discards page_info and returns only the
-            items. (Default is True)
+                items. (Default is True)
             kwargs (Any): Filters to apply on the request. Expected kwargs can be found
-            in the "Request parameters" section of the API Docs.
+                in the "Request parameters" section of the API Docs.
 
         Returns:
             Sales history data.
@@ -372,9 +374,9 @@ class Hotmart:
 
         Args:
             enhance (bool): When True, discards page_info and returns only the
-            items. (Default is True)
+                items. (Default is True)
             kwargs (Any): Filters to apply on the request. Expected kwargs can be found
-            in the "Request parameters" section of the API Docs.
+                in the "Request parameters" section of the API Docs.
 
         Returns:
              Sales summary data if available, otherwise None.
@@ -396,9 +398,9 @@ class Hotmart:
 
         Args:
             enhance (bool): When True, discards page_info and returns only the
-            items. (Default is True)
+                items. (Default is True)
             kwargs (Any): Filters to apply on the request. Expected kwargs can be found
-            in the "Request parameters" section of the API Docs.
+                in the "Request parameters" section of the API Docs.
 
         Returns:
              Sales user data if available, otherwise None.
@@ -420,9 +422,9 @@ class Hotmart:
 
         Args:
             enhance (bool): When True, discards page_info and returns only the
-            items. (Default is True)
+                items. (Default is True)
             kwargs (Any): Filters to apply on the request. Expected kwargs can be found
-            in the "Request parameters" section of the API Docs.
+                in the "Request parameters" section of the API Docs.
 
         Returns:
             Sales commissions data if available, otherwise None.
@@ -444,9 +446,9 @@ class Hotmart:
 
         Args:
             enhance (bool): When True, discards page_info and returns only the
-            items. (Default is True)
+                items. (Default is True)
             kwargs (Any): Filters to apply on the request. Expected kwargs can be found
-            in the "Request parameters" section of the API Docs.
+                in the "Request parameters" section of the API Docs.
 
         Returns:
              Sales price details if available, otherwise None.
@@ -468,9 +470,9 @@ class Hotmart:
 
         Args:
             enhance (bool): When True, discards page_info and returns only the
-            items. (Default is True)
+                items. (Default is True)
             kwargs (Any): Filters to apply on the request. Expected kwargs can be found
-            in the "Request parameters" section of the API Docs.
+                in the "Request parameters" section of the API Docs.
 
         Returns:
             Subscription data if available, otherwise None.
@@ -494,9 +496,9 @@ class Hotmart:
 
         Args:
             enhance (bool): When True, discards page_info and returns only the
-            items. (Default is True)
+                items. (Default is True)
             kwargs (Any): Filters to apply on the request. Expected kwargs can be found
-            in the "Request parameters" section of the API Docs.
+                in the "Request parameters" section of the API Docs.
 
         Returns:
              Subscription data if available, otherwise None.
@@ -521,10 +523,10 @@ class Hotmart:
 
         Args:
             enhance (bool): When True, discards page_info and returns only
-             the items. (Default is True)
+                the items. (Default is True)
             subscriber_code (str): The subscriber code to filter the request.
             kwargs (Any): Filters to apply on the request. Expected kwargs can be found
-            in the "Request parameters" section of the API Docs.
+                in the "Request parameters" section of the API Docs.
 
         Returns:
              Subscription purchases data if available, otherwise None.
@@ -550,7 +552,7 @@ class Hotmart:
 
         Args:
             subscriber_code (List[str]): The subscriber code you want to cancel
-            the subscription.
+                the subscription.
             send_email (bool): Whether to email the subscriber or not (default is True).
         :return:
         """
@@ -573,9 +575,9 @@ class Hotmart:
 
         Args:
         subscriber_code (List[str]): The subscriber code you want to reactivate
-        and charge the subscription
+            and charge the subscription
         charge (bool): Whether to make a new charge to the subscriber
-        or not (default is False).
+            or not (default is False).
         Returns:
              A dict with the response.
         """
@@ -621,7 +623,7 @@ class Hotmart:
             product_id (str): UID of the product you want to create the coupon for.
             coupon_code (str): The code of the coupon you want to create.
             discount (float): The discount you want to apply to the coupon, must be
-            greater than 0 and less than 0.99.
+                greater than 0 and less than 0.99.
         Returns:
              Empty body, just a status code 200 is successful.
         """
@@ -641,10 +643,10 @@ class Hotmart:
         Retrieves a coupon for a product.
 
         Args:
-        enhance (bool): When True, discards page_info and returns only the
-        items. (Default is True).
-        product_id (str): UID of the product you want to retrieve the coupon for.
-        code (str): The code of the coupon you want to retrieve.
+            enhance (bool): When True, discards page_info and returns only the
+                items. (Default is True).
+            product_id (str): UID of the product you want to retrieve the coupon for.
+            code (str): The code of the coupon you want to retrieve.
 
         Returns:
              All Coupons for the product.
@@ -668,7 +670,7 @@ class Hotmart:
 
         Args:
             coupon_id (str):
-        
+
         Return:
              Empty body, just a status code 200 is successful.
         """

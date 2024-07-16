@@ -8,3 +8,4 @@ dist
 /DEVNOTES.txt
 .coverage
 htmlcov/
+secrets/
