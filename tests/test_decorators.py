@@ -1,6 +1,6 @@
 import unittest
-
 from unittest.mock import Mock
+
 from hotmart_python.decorators import paginate
 
 client_id = 'b32450c1-1352-246a-b6d3-d49d6db815ea'

@@ -31,3 +31,17 @@ pymdown-extensions = "^10.8.1"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+pythonpath = "."
+addopts = "--doctest-modules"
+
+[tool.isort]
+profile = "black"
+
+[tool.taskipy.tasks]
+lint = "black --check --diff . && isort --check --diff ."
+docs = "mkdocs serve"
+pre_test = "task lint"
+test = "pytest -s -x --cov=hotmart_python -vv"
+post_test = "coverage html"

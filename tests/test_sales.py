@@ -1,6 +1,8 @@
 import unittest
 from unittest.mock import patch
+
 from requests import Response
+
 from hotmart_python import Hotmart
 
 client_id = 'b32450c1-1352-246a-b6d3-d49d6db815ea'

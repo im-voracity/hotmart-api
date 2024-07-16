@@ -1,7 +1,8 @@
-import sys
 import logging
+import sys
+from typing import Any, Callable, Dict, List
+
 import coloredlogs
-from typing import Callable, Dict, Any, List
 
 # Base Logging Configs
 logger = logging.getLogger(__name__) # noqa

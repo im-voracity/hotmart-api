@@ -1,10 +1,10 @@
+import logging
+import sys
+import time
+from typing import Any, Dict, List, Optional, Tuple
+
 import coloredlogs
 import requests
-import logging
-import time
-import sys
-
-from typing import List, Dict, Any, Optional, Tuple
 
 Response = List[Dict[str, Any]]
 

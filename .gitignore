@@ -6,3 +6,5 @@
 */.egg-info/
 dist
 /DEVNOTES.txt
+.coverage
+htmlcov/
