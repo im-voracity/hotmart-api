@@ -18,9 +18,10 @@ def authenticate():
         basic: str = config['basic']
         authenticator: Authenticator = Authenticator(client_id, client_secret, basic)
         authenticator.authenticate()
-        typer.echo("PASS: Successful authentication")
+        pass_text = typer.style("PASS", fg=typer.colors.GREEN)
+        typer.secho(f"{pass_text}: Successful authentication", fg=typer.colors.GREEN)
     except Exception as e:
-        typer.echo(f"Erro: {e}")
+        typer.secho(f"Erro: {e}", fg=typer.colors.RED)
         raise typer.Exit(code=1)
 
 

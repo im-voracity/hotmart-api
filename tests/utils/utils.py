@@ -13,16 +13,16 @@ def get_project_root() -> Path:
 
 def read_config() -> Dict[str, Any]:
     """
-    Lê o arquivo config.json do diretório PROJECT_ROOT/secrets e retorna como um dicionário.
+    Reads the config.json file from the PROJECT_ROOT/secrets directory and returns it as a dictionary.
 
     Returns:
-        Dict[str, Any]: O conteúdo do arquivo JSON como um dicionário.
+        Dict[str, Any]: The content of the JSON file as a dictionary.
 
     Raises:
-        FileNotFoundError: Se o diretório ou o arquivo não existirem.
-        json.JSONDecodeError: Se o arquivo não puder ser decodificado como JSON.
-        KeyError: Se as chaves necessárias não existirem.
-        ValueError: Se as chaves necessárias estiverem vazias.
+        FileNotFoundError: If the directory or file does not exist.
+        json.JSONDecodeError: If the file cannot be decoded as JSON.
+        KeyError: If the required keys do not exist.
+        ValueError: If the required keys are empty.
     """
     project_root = get_project_root()
     secrets_dir = project_root / "secrets"
