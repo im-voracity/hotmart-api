@@ -63,10 +63,7 @@ class Authenticator:
 
         self.logger.debug("Fetching new access token")
 
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": self.basic
-        }
+        headers = {"Content-Type": "application/json", "Authorization": self.basic}
 
         payload = {
             "grant_type": "client_credentials",
@@ -77,4 +74,3 @@ class Authenticator:
         response = requests.post(url=self.auth_url, headers=headers, params=payload)
         logger.debug("Access token obtained successfully")
         logger.debug(response.json)
-

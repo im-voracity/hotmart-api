@@ -1,7 +1,7 @@
-import os
 import json
+import os
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any, Dict
 
 
 def get_project_root() -> Path:
@@ -45,7 +45,8 @@ def read_config() -> Dict[str, Any]:
         if key not in config:
             raise KeyError(f"Required key '{key}' is missing from the config file.")
         if not config[key]:
-            raise ValueError(f"Required key '{key}' has an empty value in the config file.")
+            raise ValueError(
+                f"Required key '{key}' has an empty value in the config file."
+            )
 
     return config
-
